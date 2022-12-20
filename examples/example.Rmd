@@ -2,7 +2,9 @@
 title: "psychart"
 author: "Pasha Mazin"
 date: "2022-12-20"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -38,10 +40,10 @@ psychart(d1,col=col1,
 ## Make it animated
 ```{r animate1}
 dir.create('tmp',showWarnings = F)
-for(i in 0:90){
+for(i in 0:40){
 	png(paste0('tmp/',1000+i,'.png'),width = 12,height = 12,units = 'cm',res = 100)
 	par(mfrow=c(2,2),tck=-0.02,mgp=c(1.1,0.2,0),mar=c(0,0,1,0),oma=c(0,1,0,1))
-	a = i*20
+	a = i*15
 	psychart(d,spiral.shift = 0,init.angle= 0,main='Boring piechart')
 	psychart(d1,col=col1,spiral.shift = 60,init.angle= 0,main='Enhanced psychart')
 	psychart(d1,col=col1,spiral.shift = a,init.angle=-a,main='Animated psychart')
@@ -53,10 +55,11 @@ for(i in 0:90){
 ```{r animate2}
 require(magick)
 imgs = list.files('tmp', full.names = TRUE)
-img_list = lapply(imgs, image_read)
+img_list = lapply(c(imgs[-length(imgs)],rev(imgs[-1])), image_read)
 img_joined = image_join(img_list)
-img_animated = image_animate(img_joined, fps = 10)
+img_animated = image_animate(img_joined, fps = 10,optimize = TRUE)
 image_write(image = img_animated,
-            path = "animated.gif")
+            path = "animated.gif",
+            quality = 10)
 ```
 ![](animated.gif)
