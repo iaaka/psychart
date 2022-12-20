@@ -62,4 +62,3 @@ image_write(image = img_animated,
             path = "animated.gif",
             quality = 10)
 ```
-![](animated.gif)
